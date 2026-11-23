@@ -1,4 +1,4 @@
-// defer (urutan terbalik), panic, dan recover.
+// defer (reverse order), panic, and recover.
 //
 //	go run ./03-fungsi-error/defer-panic
 package main
@@ -9,24 +9,24 @@ import (
 	"path/filepath"
 )
 
-func tulisSementara() error {
-	path := filepath.Join(os.TempDir(), "contoh-defer.txt")
+func writeTemp() error {
+	path := filepath.Join(os.TempDir(), "defer-example.txt")
 	f, err := os.Create(path)
 	if err != nil {
 		return err
 	}
-	defer os.Remove(path) // dijalankan terakhir
-	defer f.Close()       // dijalankan lebih dulu
+	defer os.Remove(path) // runs last
+	defer f.Close()       // runs first
 
-	_, err = fmt.Fprintln(f, "halo dari defer")
+	_, err = fmt.Fprintln(f, "hello from defer")
 	return err
 }
 
-// aman mengubah panic menjadi error biasa.
-func aman(f func()) (err error) {
+// safely turns a panic into an ordinary error.
+func safely(f func()) (err error) {
 	defer func() {
 		if r := recover(); r != nil {
-			err = fmt.Errorf("terjadi panic: %v", r)
+			err = fmt.Errorf("panic occurred: %v", r)
 		}
 	}()
 	f()
@@ -35,16 +35,16 @@ func aman(f func()) (err error) {
 
 func main() {
 	for i := range 3 {
-		defer fmt.Println("defer", i) // tercetak 2, 1, 0 saat main selesai
+		defer fmt.Println("defer", i) // prints 2, 1, 0 when main returns
 	}
 
-	if err := tulisSementara(); err != nil {
-		fmt.Println("gagal:", err)
+	if err := writeTemp(); err != nil {
+		fmt.Println("failed:", err)
 	}
 
-	err := aman(func() {
-		var angka []int
-		_ = angka[5] // indeks di luar batas, panic
+	err := safely(func() {
+		var numbers []int
+		_ = numbers[5] // index out of range, panics
 	})
 	fmt.Println(err)
 }

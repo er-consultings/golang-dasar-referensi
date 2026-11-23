@@ -1,4 +1,4 @@
-// Slice: len, cap, append, potongan berbagi array, salinan, paket slices.
+// Slices: len, cap, append, sub-slices sharing an array, copies, the slices package.
 //
 //	go run ./04-struktur-data/slice
 package main
@@ -15,30 +15,30 @@ func main() {
 		fmt.Printf("len=%d cap=%d %v\n", len(s), cap(s), s)
 	}
 
-	nama := []string{"rina", "budi", "sari"}
-	hasil := make([]string, 0, len(nama)) // kapasitas disiapkan di awal
-	for _, n := range nama {
-		hasil = append(hasil, "halo "+n)
+	names := []string{"rina", "budi", "sari"}
+	greetings := make([]string, 0, len(names)) // capacity prepared up front
+	for _, n := range names {
+		greetings = append(greetings, "hello "+n)
 	}
-	fmt.Println(hasil)
+	fmt.Println(greetings)
 
-	angka := []int{10, 20, 30, 40, 50}
-	a := angka[1:3]
+	numbers := []int{10, 20, 30, 40, 50}
+	a := numbers[1:3]
 	a[0] = 99
-	fmt.Println("potongan mengubah asli:", angka)
+	fmt.Println("sub-slice changes the original:", numbers)
 
-	salinan := slices.Clone(angka)
-	salinan[0] = -1
-	fmt.Println("salinan terpisah:", angka, salinan)
+	clone := slices.Clone(numbers)
+	clone[0] = -1
+	fmt.Println("separate copy:", numbers, clone)
 
-	fmt.Println("contains 30:", slices.Contains(angka, 30))
-	fmt.Println("index 40:", slices.Index(angka, 40))
-	slices.Sort(angka)
-	fmt.Println("urut:", angka)
-	i, ok := slices.BinarySearch(angka, 40)
+	fmt.Println("contains 30:", slices.Contains(numbers, 30))
+	fmt.Println("index of 40:", slices.Index(numbers, 40))
+	slices.Sort(numbers)
+	fmt.Println("sorted:", numbers)
+	i, ok := slices.BinarySearch(numbers, 40)
 	fmt.Println("binary search 40:", i, ok)
 
-	// Slice 2 dimensi, sering muncul di soal matriks.
+	// A 2D slice, common in matrix problems.
 	grid := make([][]int, 3)
 	for r := range grid {
 		grid[r] = make([]int, 4)
@@ -46,6 +46,6 @@ func main() {
 	grid[1][2] = 7
 	fmt.Println(grid)
 
-	var kosong []int
-	fmt.Println("kosong?", len(kosong) == 0)
+	var empty []int
+	fmt.Println("empty?", len(empty) == 0)
 }

@@ -1,10 +1,11 @@
-# biner hasil go build
-/halo
-/kasir
-/belanja
-/hitung-kata
-/catatan-api
+# binaries from go build
+/hello
+/cashier
+/shopping
+/shopping-cli
+/word-count
+/notes-api
 *.exe
 
-# data lokal aplikasi contoh
-belanja.json
+# local data from the sample apps
+shopping.json

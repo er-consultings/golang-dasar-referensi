@@ -1,4 +1,4 @@
-// Struct, konstruktor, method dengan value dan pointer receiver, tag JSON.
+// Structs, constructors, methods with value and pointer receivers, JSON tags.
 //
 //	go run ./04-struktur-data/struct-method
 package main
@@ -9,53 +9,53 @@ import (
 	"fmt"
 )
 
-type Produk struct {
+type Product struct {
 	ID    int    `json:"id"`
-	Nama  string `json:"nama"`
-	Harga int64  `json:"harga"`
-	Stok  int    `json:"stok"`
-	modal int64  // huruf kecil: tidak ikut ke JSON
+	Name  string `json:"name"`
+	Price int64  `json:"price"`
+	Stock int    `json:"stock"`
+	cost  int64  // lowercase: not included in JSON
 }
 
-func NewProduk(nama string, harga int64) (*Produk, error) {
-	if harga < 0 {
-		return nil, errors.New("harga tidak boleh negatif")
+func NewProduct(name string, price int64) (*Product, error) {
+	if price < 0 {
+		return nil, errors.New("price must not be negative")
 	}
-	return &Produk{Nama: nama, Harga: harga}, nil
+	return &Product{Name: name, Price: price}, nil
 }
 
-func (p *Produk) Total(jumlah int) int64 { return p.Harga * int64(jumlah) }
+func (p *Product) Total(qty int) int64 { return p.Price * int64(qty) }
 
-func (p *Produk) KurangiStok(n int) error {
-	if n > p.Stok {
-		return fmt.Errorf("stok %s tinggal %d", p.Nama, p.Stok)
+func (p *Product) ReduceStock(n int) error {
+	if n > p.Stock {
+		return fmt.Errorf("only %d %s left in stock", p.Stock, p.Name)
 	}
-	p.Stok -= n
+	p.Stock -= n
 	return nil
 }
 
 func main() {
-	p, err := NewProduk("Kopi Arabika", 85000)
+	p, err := NewProduct("Arabica Coffee", 85000)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	p.Stok = 3
-	p.modal = 60000
+	p.Stock = 3
+	p.cost = 60000
 	fmt.Printf("%+v\n", *p)
-	fmt.Println("total 2:", p.Total(2))
+	fmt.Println("total for 2:", p.Total(2))
 
-	if err := p.KurangiStok(5); err != nil {
-		fmt.Println("gagal:", err)
+	if err := p.ReduceStock(5); err != nil {
+		fmt.Println("failed:", err)
 	}
-	_ = p.KurangiStok(2)
-	fmt.Println("sisa stok:", p.Stok)
+	_ = p.ReduceStock(2)
+	fmt.Println("stock left:", p.Stock)
 
 	data, _ := json.Marshal(p)
 	fmt.Println(string(data))
 
-	var dariJSON Produk
-	if err := json.Unmarshal([]byte(`{"id":2,"nama":"Teh","harga":12000}`), &dariJSON); err == nil {
-		fmt.Printf("%+v\n", dariJSON)
+	var fromJSON Product
+	if err := json.Unmarshal([]byte(`{"id":2,"name":"Tea","price":12000}`), &fromJSON); err == nil {
+		fmt.Printf("%+v\n", fromJSON)
 	}
 }

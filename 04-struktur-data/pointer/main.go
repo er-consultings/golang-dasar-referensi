@@ -1,22 +1,22 @@
-// Pointer: & dan *, mengubah nilai pemanggil, nil pointer.
+// Pointers: & and *, changing the caller's value, nil pointers.
 //
 //	go run ./04-struktur-data/pointer
 package main
 
 import "fmt"
 
-type Produk struct {
-	Nama  string
-	Harga int64
+type Product struct {
+	Name  string
+	Price int64
 }
 
-func diskon(p *Produk, persen int64) {
-	p.Harga -= p.Harga * persen / 100
+func applyDiscount(p *Product, percent int64) {
+	p.Price -= p.Price * percent / 100
 }
 
-func buatProduk() *Produk {
-	p := Produk{Nama: "Baru"}
-	return &p // aman, kompiler memindahkannya ke heap
+func newProduct() *Product {
+	p := Product{Name: "New"}
+	return &p // safe, the compiler moves it to the heap
 }
 
 func main() {
@@ -25,14 +25,14 @@ func main() {
 	*p = 20
 	fmt.Println("x:", x)
 
-	kopi := Produk{Nama: "Kopi", Harga: 50000}
-	diskon(&kopi, 10)
-	fmt.Println("harga setelah diskon:", kopi.Harga)
+	coffee := Product{Name: "Coffee", Price: 50000}
+	applyDiscount(&coffee, 10)
+	fmt.Println("price after discount:", coffee.Price)
 
-	fmt.Println(buatProduk().Nama)
+	fmt.Println(newProduct().Name)
 
-	var kosong *Produk
-	if kosong == nil {
-		fmt.Println("pointer nil, jangan akses field-nya")
+	var empty *Product
+	if empty == nil {
+		fmt.Println("nil pointer, do not access its fields")
 	}
 }
