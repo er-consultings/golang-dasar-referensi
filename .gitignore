@@ -1,0 +1,10 @@
+# biner hasil go build
+/halo
+/kasir
+/belanja
+/hitung-kata
+/catatan-api
+*.exe
+
+# data lokal aplikasi contoh
+belanja.json
