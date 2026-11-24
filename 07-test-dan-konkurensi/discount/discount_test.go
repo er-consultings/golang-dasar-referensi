@@ -22,3 +22,12 @@ func TestApply(t *testing.T) {
 		})
 	}
 }
+
+// sink keeps the result alive, so the compiler cannot skip the call being measured.
+var sink int64
+
+func BenchmarkApply(b *testing.B) {
+	for range b.N {
+		sink = Apply(100000, 10)
+	}
+}
